@@ -82,4 +82,4 @@ La ejecución muestra en consola la asignación de repartidores para los tres ti
 
 ## Autor
 
-Proyecto académico desarrollado para la asignatura **Desarrollo Orientado a Objetos II**.
+Proyecto académico desarrollado para la asignatura **Desarrollo Orientado a Objetos II**, Benjamín Lizama.
