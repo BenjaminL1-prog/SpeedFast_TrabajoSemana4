@@ -1,3 +1,4 @@
+
 package main;
 
 import model.Pedido;
@@ -17,49 +18,56 @@ public class Main {
         // Creación de pedidos
         Pedido pedidoComida = new PedidoComida(
                 1,
-                "Av. Providencia 1234"
+                "Av. Providencia 1234",
+                4.0
         );
 
         Pedido pedidoEncomienda = new PedidoEncomienda(
                 2,
-                "Av. Las Condes 2456"
+                "Av. Las Condes 2456",
+                6.0
         );
 
         Pedido pedidoExpress = new PedidoExpress(
                 3,
-                "Av. Vicuña Mackenna 789"
+                "Av. Vicuña Mackenna 789",
+                7.0
         );
 
-        // Sobreescritura: Java ejecuta el método correspondiente
-        // al tipo real de cada objeto.
-        System.out.println("--- ASIGNACIÓN AUTOMÁTICA ---");
+        // Pedido de comida
+        System.out.println("--- PEDIDO COMIDA ---");
+        pedidoComida.mostrarResumen();
+        System.out.println("Tiempo estimado: "
+                + pedidoComida.calcularTiempoEntrega() + " minutos");
         System.out.println();
 
-        pedidoComida.asignarRepartidor();
+        // Pedido de encomienda
+        System.out.println("--- PEDIDO ENCOMIENDA ---");
+        pedidoEncomienda.mostrarResumen();
+        System.out.println("Tiempo estimado: "
+                + pedidoEncomienda.calcularTiempoEntrega() + " minutos");
         System.out.println();
 
-        pedidoEncomienda.asignarRepartidor();
+        // Pedido express
+        System.out.println("--- PEDIDO EXPRESS ---");
+        pedidoExpress.mostrarResumen();
+        System.out.println("Tiempo estimado: "
+                + pedidoExpress.calcularTiempoEntrega() + " minutos");
         System.out.println();
 
-        pedidoExpress.asignarRepartidor();
-        System.out.println();
-
-        // Sobrecarga: se utiliza la versión que recibe
-        // el nombre del repartidor.
-        System.out.println("--- ASIGNACIÓN CON REPARTIDOR ---");
-        System.out.println();
-
-        pedidoComida.asignarRepartidor("Juan Pérez");
-        System.out.println();
-
-        pedidoEncomienda.asignarRepartidor("Camila Soto");
-        System.out.println();
-
-        pedidoExpress.asignarRepartidor("Luis Díaz");
-        System.out.println();
-
+        // Comparación de tiempos
+        System.out.println("========================================");
+        System.out.println("       COMPARACIÓN DE TIEMPOS");
+        System.out.println("========================================");
+        System.out.println("Comida:       "
+                + pedidoComida.calcularTiempoEntrega() + " minutos");
+        System.out.println("Encomienda:   "
+                + pedidoEncomienda.calcularTiempoEntrega() + " minutos");
+        System.out.println("Express:      "
+                + pedidoExpress.calcularTiempoEntrega() + " minutos");
         System.out.println("========================================");
         System.out.println("       PROCESO FINALIZADO");
         System.out.println("========================================");
     }
 }
+
