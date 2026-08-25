@@ -2,17 +2,17 @@
 
 Sistema de gestión de pedidos desarrollado en Java para la empresa de reparto **SpeedFast**.
 
-El proyecto representa distintos tipos de servicios de entrega y utiliza conceptos fundamentales de **Programación Orientada a Objetos**, especialmente herencia, polimorfismo, sobrecarga y sobreescritura de métodos.
+El proyecto representa distintos tipos de pedidos y utiliza conceptos fundamentales de **Programación Orientada a Objetos**, especialmente clases abstractas, herencia, polimorfismo y sobreescritura de métodos.
 
 ## Descripción
 
-SpeedFast ofrece tres tipos de servicio:
+SpeedFast gestiona tres tipos de pedidos:
 
-* **Pedido de Comida:** requiere un repartidor que disponga de mochila térmica.
-* **Pedido de Encomienda:** requiere validación del peso y embalaje.
-* **Pedido Express:** requiere encontrar un repartidor cercano con disponibilidad inmediata.
+* **Pedido de Comida:** calcula su tiempo de entrega considerando una base de 15 minutos más 2 minutos por cada kilómetro.
+* **Pedido de Encomienda:** calcula su tiempo de entrega considerando una base de 20 minutos más 1,5 minutos por cada kilómetro.
+* **Pedido Express:** tiene un tiempo base de 10 minutos y agrega 5 minutos adicionales cuando la distancia supera los 5 km.
 
-El sistema utiliza una jerarquía de clases para representar estos distintos tipos de pedidos y permite asignar repartidores mediante métodos polimórficos.
+El sistema utiliza una jerarquía de clases basada en una clase abstracta `Pedido`, permitiendo reutilizar atributos y métodos comunes y definir un cálculo de tiempo específico para cada tipo de pedido.
 
 ## Estructura del proyecto
 
@@ -32,35 +32,35 @@ src
 
 **Pedido**
 
-Clase base que contiene los atributos generales de un pedido:
+Clase abstracta que contiene los atributos generales de un pedido:
 
 * `idPedido`
 * `direccionEntrega`
-* `tipoPedido`
+* `distanciaKm`
 
-También define los métodos `asignarRepartidor()` y su versión sobrecargada.
+También implementa el método `mostrarResumen()` y declara el método abstracto `calcularTiempoEntrega()`.
 
 **PedidoComida**
 
-Extiende `Pedido` y sobrescribe la lógica de asignación considerando la disponibilidad de una mochila térmica.
+Extiende `Pedido` y sobrescribe `calcularTiempoEntrega()` utilizando la fórmula de 15 minutos base más 2 minutos por cada kilómetro.
 
 **PedidoEncomienda**
 
-Extiende `Pedido` y sobrescribe la lógica de asignación considerando la validación del peso y embalaje.
+Extiende `Pedido` y sobrescribe `calcularTiempoEntrega()` utilizando la fórmula de 20 minutos base más 1,5 minutos por cada kilómetro, ajustando el resultado a un número entero.
 
 **PedidoExpress**
 
-Extiende `Pedido` y sobrescribe la lógica de asignación considerando la cercanía y disponibilidad inmediata del repartidor.
+Extiende `Pedido` y sobrescribe `calcularTiempoEntrega()` utilizando un tiempo base de 10 minutos y agregando 5 minutos cuando la distancia supera los 5 km.
 
 **Main**
 
-Contiene la ejecución del sistema y demuestra el uso de las distintas implementaciones mediante polimorfismo y sobrecarga.
+Contiene la ejecución del sistema y demuestra el uso de las distintas implementaciones mediante polimorfismo, mostrando el resumen y el tiempo estimado de cada pedido.
 
 ## Conceptos de POO aplicados
 
+* **Clase abstracta:** `Pedido` define la estructura y comportamiento común de los pedidos.
 * **Herencia:** las clases específicas heredan de `Pedido`.
-* **Sobreescritura:** cada subclase implementa su propia versión de `asignarRepartidor()`.
-* **Sobrecarga:** se utiliza una segunda versión de `asignarRepartidor()` que recibe el nombre del repartidor.
+* **Sobreescritura:** cada subclase implementa su propia versión de `calcularTiempoEntrega()`.
 * **Polimorfismo:** objetos de las clases derivadas son manejados mediante referencias de tipo `Pedido`.
 
 ## Tecnologías
@@ -78,8 +78,9 @@ El programa se ejecuta desde la clase:
 Main.java
 ```
 
-La ejecución muestra en consola la asignación de repartidores para los tres tipos de pedido.
+La ejecución muestra en consola el resumen de los tres tipos de pedido y sus respectivos tiempos estimados de entrega.
 
 ## Autor
 
 Proyecto académico desarrollado para la asignatura **Desarrollo Orientado a Objetos II**, Benjamín Lizama.
+
