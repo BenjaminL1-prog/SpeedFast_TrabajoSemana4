@@ -10,4 +10,12 @@ public class PedidoEncomienda extends Pedido {
     public int calcularTiempoEntrega() {
         return (int) (20 + (1.5 * getDistanciaKm()));
     }
+
+    public void asignarRepartidor() {
+        System.out.println("Repartidor asignado automáticamente: Daniela Tapia");
+    }
+
+    public void asignarRepartidor(String nombre) {
+        System.out.println("Repartidor asignado manualmente: " + nombre);
+    }
 }

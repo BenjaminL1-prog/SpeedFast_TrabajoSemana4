@@ -1,7 +1,5 @@
-
 package main;
 
-import model.Pedido;
 import model.PedidoComida;
 import model.PedidoEncomienda;
 import model.PedidoExpress;
@@ -16,19 +14,19 @@ public class Main {
         System.out.println();
 
         // Creación de pedidos
-        Pedido pedidoComida = new PedidoComida(
+        PedidoComida pedidoComida = new PedidoComida(
                 1,
                 "Av. Providencia 1234",
                 4.0
         );
 
-        Pedido pedidoEncomienda = new PedidoEncomienda(
+        PedidoEncomienda pedidoEncomienda = new PedidoEncomienda(
                 2,
                 "Av. Las Condes 2456",
                 6.0
         );
 
-        Pedido pedidoExpress = new PedidoExpress(
+        PedidoExpress pedidoExpress = new PedidoExpress(
                 3,
                 "Av. Vicuña Mackenna 789",
                 7.0
@@ -39,6 +37,7 @@ public class Main {
         pedidoComida.mostrarResumen();
         System.out.println("Tiempo estimado: "
                 + pedidoComida.calcularTiempoEntrega() + " minutos");
+        pedidoComida.asignarRepartidor();
         System.out.println();
 
         // Pedido de encomienda
@@ -46,6 +45,7 @@ public class Main {
         pedidoEncomienda.mostrarResumen();
         System.out.println("Tiempo estimado: "
                 + pedidoEncomienda.calcularTiempoEntrega() + " minutos");
+        pedidoEncomienda.asignarRepartidor();
         System.out.println();
 
         // Pedido express
@@ -53,6 +53,16 @@ public class Main {
         pedidoExpress.mostrarResumen();
         System.out.println("Tiempo estimado: "
                 + pedidoExpress.calcularTiempoEntrega() + " minutos");
+        pedidoExpress.asignarRepartidor("Pedro González");
+        System.out.println();
+
+        // Reserva de pedidos
+        System.out.println("========================================");
+        System.out.println("          RESERVA DE PEDIDOS");
+        System.out.println("========================================");
+        pedidoComida.reservarPedido();
+        pedidoEncomienda.reservarPedido();
+        pedidoExpress.reservarPedido();
         System.out.println();
 
         // Comparación de tiempos
@@ -66,8 +76,35 @@ public class Main {
         System.out.println("Express:      "
                 + pedidoExpress.calcularTiempoEntrega() + " minutos");
         System.out.println("========================================");
+        System.out.println();
+
+        // Despacho de pedidos
+        System.out.println("========================================");
+        System.out.println("          DESPACHO DE PEDIDOS");
+        System.out.println("========================================");
+        pedidoComida.despachar();
+        pedidoEncomienda.despachar();
+        System.out.println();
+
+        // Cancelación de pedido
+        System.out.println("========================================");
+        System.out.println("        CANCELACIÓN DE PEDIDO");
+        System.out.println("========================================");
+        System.out.println("Cancelando Pedido Express #003...");
+        pedidoExpress.cancelar();
+        System.out.println();
+
+        // Historial
+        System.out.println("========================================");
+        System.out.println("       HISTORIAL DE ENTREGAS");
+        System.out.println("========================================");
+        pedidoComida.verHistorial();
+        pedidoEncomienda.verHistorial();
+        pedidoExpress.verHistorial();
+        System.out.println();
+
+        System.out.println("========================================");
         System.out.println("       PROCESO FINALIZADO");
         System.out.println("========================================");
     }
 }
-

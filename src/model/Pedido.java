@@ -1,10 +1,17 @@
 package model;
 
-public abstract class Pedido {
+import interfaces.Despachable;
+import interfaces.Cancelable;
+import interfaces.Rastreable;
+import java.util.ArrayList;
+
+public abstract class Pedido implements Despachable, Cancelable, Rastreable {
 
     private int idPedido;
     private String direccionEntrega;
     private double distanciaKm;
+
+    private ArrayList<String> historial = new ArrayList<>();
 
     public Pedido(int idPedido, String direccionEntrega, double distanciaKm) {
         this.idPedido = idPedido;
@@ -43,4 +50,34 @@ public abstract class Pedido {
     }
 
     public abstract int calcularTiempoEntrega();
+
+    public void reservarPedido() {
+        System.out.println("Pedido reservado correctamente.");
+        historial.add("Pedido #" + String.format("%03d", idPedido) + " - reservado");
+    }
+
+    @Override
+    public void despachar() {
+        System.out.println("Pedido despachado correctamente.");
+        historial.add("Pedido #" + String.format("%03d", idPedido) + " - despachado");
+    }
+
+    @Override
+    public void cancelar() {
+        System.out.println("Pedido cancelado exitosamente.");
+        historial.add("Pedido #" + String.format("%03d", idPedido) + " - cancelado");
+    }
+
+    @Override
+    public void verHistorial() {
+        System.out.println("Historial de entregas:");
+
+        if (historial.isEmpty()) {
+            System.out.println("- No hay movimientos registrados.");
+        } else {
+            for (String registro : historial) {
+                System.out.println("- " + registro);
+            }
+        }
+    }
 }

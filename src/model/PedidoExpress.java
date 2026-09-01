@@ -14,4 +14,12 @@ public class PedidoExpress extends Pedido {
 
         return 10;
     }
+
+    public void asignarRepartidor() {
+        System.out.println("Repartidor asignado automáticamente: Carlos Soto");
+    }
+
+    public void asignarRepartidor(String nombre) {
+        System.out.println("Repartidor asignado manualmente: " + nombre);
+    }
 }
