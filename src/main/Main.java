@@ -3,6 +3,10 @@ package main;
 import model.PedidoComida;
 import model.PedidoEncomienda;
 import model.PedidoExpress;
+import model.Repartidor;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
 
@@ -14,55 +18,73 @@ public class Main {
         System.out.println();
 
         // Creación de pedidos
-        PedidoComida pedidoComida = new PedidoComida(
+        PedidoComida pedidoComida1 = new PedidoComida(
                 1,
                 "Av. Providencia 1234",
                 4.0
         );
 
-        PedidoEncomienda pedidoEncomienda = new PedidoEncomienda(
+        PedidoComida pedidoComida2 = new PedidoComida(
                 2,
+                "Av. Apoquindo 456",
+                3.0
+        );
+
+        PedidoEncomienda pedidoEncomienda1 = new PedidoEncomienda(
+                3,
                 "Av. Las Condes 2456",
                 6.0
         );
 
-        PedidoExpress pedidoExpress = new PedidoExpress(
-                3,
+        PedidoEncomienda pedidoEncomienda2 = new PedidoEncomienda(
+                4,
+                "Av. Kennedy 1234",
+                5.0
+        );
+
+        PedidoExpress pedidoExpress1 = new PedidoExpress(
+                5,
                 "Av. Vicuña Mackenna 789",
                 7.0
         );
 
+        PedidoExpress pedidoExpress2 = new PedidoExpress(
+                6,
+                "Av. Grecia 321",
+                4.0
+        );
+
         // Pedido de comida
         System.out.println("--- PEDIDO COMIDA ---");
-        pedidoComida.mostrarResumen();
+        pedidoComida1.mostrarResumen();
         System.out.println("Tiempo estimado: "
-                + pedidoComida.calcularTiempoEntrega() + " minutos");
-        pedidoComida.asignarRepartidor();
+                + pedidoComida1.calcularTiempoEntrega() + " minutos");
+        pedidoComida1.asignarRepartidor();
         System.out.println();
 
         // Pedido de encomienda
         System.out.println("--- PEDIDO ENCOMIENDA ---");
-        pedidoEncomienda.mostrarResumen();
+        pedidoEncomienda1.mostrarResumen();
         System.out.println("Tiempo estimado: "
-                + pedidoEncomienda.calcularTiempoEntrega() + " minutos");
-        pedidoEncomienda.asignarRepartidor();
+                + pedidoEncomienda1.calcularTiempoEntrega() + " minutos");
+        pedidoEncomienda1.asignarRepartidor();
         System.out.println();
 
         // Pedido express
         System.out.println("--- PEDIDO EXPRESS ---");
-        pedidoExpress.mostrarResumen();
+        pedidoExpress1.mostrarResumen();
         System.out.println("Tiempo estimado: "
-                + pedidoExpress.calcularTiempoEntrega() + " minutos");
-        pedidoExpress.asignarRepartidor("Pedro González");
+                + pedidoExpress1.calcularTiempoEntrega() + " minutos");
+        pedidoExpress1.asignarRepartidor("Pedro González");
         System.out.println();
 
         // Reserva de pedidos
         System.out.println("========================================");
         System.out.println("          RESERVA DE PEDIDOS");
         System.out.println("========================================");
-        pedidoComida.reservarPedido();
-        pedidoEncomienda.reservarPedido();
-        pedidoExpress.reservarPedido();
+        pedidoComida1.reservarPedido();
+        pedidoEncomienda1.reservarPedido();
+        pedidoExpress1.reservarPedido();
         System.out.println();
 
         // Comparación de tiempos
@@ -70,11 +92,11 @@ public class Main {
         System.out.println("       COMPARACIÓN DE TIEMPOS");
         System.out.println("========================================");
         System.out.println("Comida:       "
-                + pedidoComida.calcularTiempoEntrega() + " minutos");
+                + pedidoComida1.calcularTiempoEntrega() + " minutos");
         System.out.println("Encomienda:   "
-                + pedidoEncomienda.calcularTiempoEntrega() + " minutos");
+                + pedidoEncomienda1.calcularTiempoEntrega() + " minutos");
         System.out.println("Express:      "
-                + pedidoExpress.calcularTiempoEntrega() + " minutos");
+                + pedidoExpress1.calcularTiempoEntrega() + " minutos");
         System.out.println("========================================");
         System.out.println();
 
@@ -82,27 +104,66 @@ public class Main {
         System.out.println("========================================");
         System.out.println("          DESPACHO DE PEDIDOS");
         System.out.println("========================================");
-        pedidoComida.despachar();
-        pedidoEncomienda.despachar();
+        pedidoComida1.despachar();
+        pedidoEncomienda1.despachar();
         System.out.println();
 
         // Cancelación de pedido
         System.out.println("========================================");
         System.out.println("        CANCELACIÓN DE PEDIDO");
         System.out.println("========================================");
-        System.out.println("Cancelando Pedido Express #003...");
-        pedidoExpress.cancelar();
+        System.out.println("Cancelando Pedido Express #005...");
+        pedidoExpress1.cancelar();
         System.out.println();
 
         // Historial
         System.out.println("========================================");
         System.out.println("       HISTORIAL DE ENTREGAS");
         System.out.println("========================================");
-        pedidoComida.verHistorial();
-        pedidoEncomienda.verHistorial();
-        pedidoExpress.verHistorial();
+        pedidoComida1.verHistorial();
+        pedidoEncomienda1.verHistorial();
+        pedidoExpress1.verHistorial();
         System.out.println();
 
+        // Creación de repartidores
+        Repartidor camila = new Repartidor("Camila");
+        Repartidor luis = new Repartidor("Luis");
+        Repartidor pedro = new Repartidor("Pedro");
+
+        // Asignación de pedidos
+        camila.agregarPedido(pedidoComida1);
+        camila.agregarPedido(pedidoComida2);
+
+        luis.agregarPedido(pedidoEncomienda1);
+        luis.agregarPedido(pedidoEncomienda2);
+
+        pedro.agregarPedido(pedidoExpress1);
+        pedro.agregarPedido(pedidoExpress2);
+
+        // Ejecución concurrente
+        System.out.println("========================================");
+        System.out.println("       INICIO DE ENTREGAS CONCURRENTES");
+        System.out.println("========================================");
+
+        ExecutorService executor = Executors.newFixedThreadPool(3);
+
+        executor.submit(camila);
+        executor.submit(luis);
+        executor.submit(pedro);
+
+        executor.shutdown();
+
+        try {
+            while (!executor.isTerminated()) {
+                Thread.sleep(100);
+            }
+        } catch (InterruptedException e) {
+            System.out.println("El proceso de entregas fue interrumpido.");
+            Thread.currentThread().interrupt();
+            executor.shutdownNow();
+        }
+
+        System.out.println();
         System.out.println("========================================");
         System.out.println("       PROCESO FINALIZADO");
         System.out.println("========================================");
