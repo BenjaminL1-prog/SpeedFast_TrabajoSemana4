@@ -4,6 +4,8 @@ Sistema de gestión de pedidos desarrollado en Java para la empresa de reparto *
 
 El proyecto representa distintos tipos de pedidos y utiliza conceptos fundamentales de **Programación Orientada a Objetos**, especialmente clases abstractas, herencia, polimorfismo, sobrecarga, sobreescritura e interfaces.
 
+En esta semana se incorpora el uso de **programación multihilo**, permitiendo ejecutar las entregas de distintos repartidores de manera concurrente mediante `Runnable`, `Thread.sleep()` y `ExecutorService`.
+
 ## Descripción
 
 SpeedFast gestiona tres tipos de pedidos:
@@ -16,6 +18,8 @@ El sistema utiliza una jerarquía de clases basada en una clase abstracta `Pedid
 
 Además, se incorporan interfaces para separar responsabilidades relacionadas con el despacho, la cancelación y el seguimiento de los pedidos.
 
+En esta versión se incorpora la clase `Repartidor`, que implementa `Runnable` y permite simular las entregas de varios repartidores de manera concurrente. Cada repartidor procesa sus pedidos de forma secuencial y utiliza `Thread.sleep()` para simular el tiempo de entrega.
+
 ## Estructura del proyecto
 
 ```text
@@ -27,7 +31,8 @@ src
 │   ├── Pedido.java
 │   ├── PedidoComida.java
 │   ├── PedidoEncomienda.java
-│   └── PedidoExpress.java
+│   ├── PedidoExpress.java
+│   └── Repartidor.java
 │
 └── interfaces
     ├── Despachable.java
@@ -67,11 +72,28 @@ Extiende `Pedido` y sobrescribe `calcularTiempoEntrega()` utilizando un tiempo b
 
 También permite asignar un repartidor de forma automática o manual.
 
+**Repartidor**
+
+Representa a un repartidor encargado de realizar una lista de pedidos.
+
+Contiene:
+
+* `nombre`
+* Lista de pedidos asignados
+
+Implementa la interfaz `Runnable`, permitiendo que cada repartidor sea ejecutado como una tarea independiente.
+
+El método `run()` procesa los pedidos asignados de forma secuencial y utiliza `Thread.sleep()` con tiempos aleatorios para simular el proceso de entrega.
+
+Durante la ejecución se muestra en consola el progreso de cada entrega y la finalización de las tareas del repartidor.
+
 **Main**
 
 Contiene la ejecución del sistema y demuestra el uso de las distintas clases mediante polimorfismo.
 
 La simulación incluye la creación de pedidos, asignación de repartidores, cálculo del tiempo estimado, reserva, despacho, cancelación y visualización del historial de operaciones.
+
+También crea tres repartidores, asignando dos pedidos a cada uno, y utiliza `ExecutorService` para ejecutar sus tareas de manera concurrente.
 
 ### Interfaces
 
@@ -87,7 +109,7 @@ Define el método `cancelar()`, encargado de representar la cancelación de un p
 
 Define el método `verHistorial()`, encargado de mostrar el historial de operaciones realizadas sobre los pedidos.
 
-## Conceptos de POO aplicados
+## Conceptos de POO y programación multihilo aplicados
 
 * **Clase abstracta:** `Pedido` define la estructura y comportamiento común de los pedidos.
 * **Herencia:** las clases específicas heredan de `Pedido`.
@@ -96,6 +118,10 @@ Define el método `verHistorial()`, encargado de mostrar el historial de operaci
 * **Polimorfismo:** las clases derivadas utilizan y especializan los comportamientos definidos en `Pedido`.
 * **Interfaces:** `Despachable`, `Cancelable` y `Rastreable` separan responsabilidades funcionales del sistema.
 * **Encapsulamiento:** los atributos de `Pedido` son privados y se accede a ellos mediante métodos `get` y `set`.
+* **Runnable:** `Repartidor` implementa `Runnable` para representar una tarea que puede ejecutarse de forma concurrente.
+* **Thread.sleep():** se utiliza para simular el tiempo que demora cada entrega.
+* **ExecutorService:** administra la ejecución concurrente de los repartidores mediante un grupo de hilos.
+* **Programación concurrente:** los distintos repartidores pueden realizar sus entregas simultáneamente.
 
 ## Tecnologías
 
@@ -113,6 +139,8 @@ Main.java
 ```
 
 La ejecución muestra en consola el resumen de los tres tipos de pedido, sus respectivos tiempos estimados, la asignación de repartidores, la reserva, el despacho, la cancelación y el historial de operaciones.
+
+Finalmente, se simulan las entregas de tres repartidores de manera concurrente, mostrando en consola el progreso de cada pedido hasta completar todas las entregas.
 
 ## Autor
 
