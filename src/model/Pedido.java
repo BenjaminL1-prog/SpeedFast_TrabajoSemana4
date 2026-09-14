@@ -11,6 +11,7 @@ public abstract class Pedido implements Despachable, Cancelable, Rastreable {
     private int idPedido;
     private String direccionEntrega;
     private double distanciaKm;
+    private EstadoPedido estado;
 
     private ArrayList<String> historial = new ArrayList<>();
 
@@ -18,6 +19,7 @@ public abstract class Pedido implements Despachable, Cancelable, Rastreable {
         this.idPedido = idPedido;
         this.direccionEntrega = direccionEntrega;
         this.distanciaKm = distanciaKm;
+        this.estado = EstadoPedido.PENDIENTE;
     }
 
     public int getIdPedido() {
@@ -44,10 +46,23 @@ public abstract class Pedido implements Despachable, Cancelable, Rastreable {
         this.distanciaKm = distanciaKm;
     }
 
+    public EstadoPedido getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoPedido estado) {
+        this.estado = estado;
+    }
+
+    public void setEstado(String nuevoEstado) {
+        this.estado = EstadoPedido.valueOf(nuevoEstado.toUpperCase());
+    }
+
     public void mostrarResumen() {
         System.out.println("Pedido #" + String.format("%03d", idPedido));
         System.out.println("Dirección: " + direccionEntrega);
         System.out.println("Distancia: " + distanciaKm + " km");
+        System.out.println("Estado: " + estado);
     }
 
     public abstract int calcularTiempoEntrega();
@@ -80,5 +95,15 @@ public abstract class Pedido implements Despachable, Cancelable, Rastreable {
                 System.out.println("- " + registro);
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "idPedido=" + idPedido +
+                ", direccionEntrega='" + direccionEntrega + '\'' +
+                ", distanciaKm=" + distanciaKm +
+                ", estado=" + estado +
+                '}';
     }
 }

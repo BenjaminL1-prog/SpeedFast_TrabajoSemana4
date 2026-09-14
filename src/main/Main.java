@@ -1,12 +1,16 @@
 package main;
 
+import model.Pedido;
 import model.PedidoComida;
 import model.PedidoEncomienda;
 import model.PedidoExpress;
 import model.Repartidor;
+import model.ZonaDeCarga;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
 
@@ -54,91 +58,33 @@ public class Main {
                 4.0
         );
 
-        // Pedido de comida
-        System.out.println("--- PEDIDO COMIDA ---");
-        pedidoComida1.mostrarResumen();
-        System.out.println("Tiempo estimado: "
-                + pedidoComida1.calcularTiempoEntrega() + " minutos");
-        pedidoComida1.asignarRepartidor();
-        System.out.println();
+        // Lista para controlar los pedidos creados
+        ArrayList<Pedido> pedidos = new ArrayList<>();
 
-        // Pedido de encomienda
-        System.out.println("--- PEDIDO ENCOMIENDA ---");
-        pedidoEncomienda1.mostrarResumen();
-        System.out.println("Tiempo estimado: "
-                + pedidoEncomienda1.calcularTiempoEntrega() + " minutos");
-        pedidoEncomienda1.asignarRepartidor();
-        System.out.println();
+        pedidos.add(pedidoComida1);
+        pedidos.add(pedidoComida2);
+        pedidos.add(pedidoEncomienda1);
+        pedidos.add(pedidoEncomienda2);
+        pedidos.add(pedidoExpress1);
+        pedidos.add(pedidoExpress2);
 
-        // Pedido express
-        System.out.println("--- PEDIDO EXPRESS ---");
-        pedidoExpress1.mostrarResumen();
-        System.out.println("Tiempo estimado: "
-                + pedidoExpress1.calcularTiempoEntrega() + " minutos");
-        pedidoExpress1.asignarRepartidor("Pedro González");
-        System.out.println();
+        // Creación de la zona de carga compartida
+        ZonaDeCarga zonaDeCarga = new ZonaDeCarga();
 
-        // Reserva de pedidos
         System.out.println("========================================");
-        System.out.println("          RESERVA DE PEDIDOS");
+        System.out.println("       CARGA DE PEDIDOS");
         System.out.println("========================================");
-        pedidoComida1.reservarPedido();
-        pedidoEncomienda1.reservarPedido();
-        pedidoExpress1.reservarPedido();
-        System.out.println();
 
-        // Comparación de tiempos
-        System.out.println("========================================");
-        System.out.println("       COMPARACIÓN DE TIEMPOS");
-        System.out.println("========================================");
-        System.out.println("Comida:       "
-                + pedidoComida1.calcularTiempoEntrega() + " minutos");
-        System.out.println("Encomienda:   "
-                + pedidoEncomienda1.calcularTiempoEntrega() + " minutos");
-        System.out.println("Express:      "
-                + pedidoExpress1.calcularTiempoEntrega() + " minutos");
-        System.out.println("========================================");
-        System.out.println();
+        for (Pedido pedido : pedidos) {
+            zonaDeCarga.agregarPedido(pedido);
+        }
 
-        // Despacho de pedidos
-        System.out.println("========================================");
-        System.out.println("          DESPACHO DE PEDIDOS");
-        System.out.println("========================================");
-        pedidoComida1.despachar();
-        pedidoEncomienda1.despachar();
-        System.out.println();
-
-        // Cancelación de pedido
-        System.out.println("========================================");
-        System.out.println("        CANCELACIÓN DE PEDIDO");
-        System.out.println("========================================");
-        System.out.println("Cancelando Pedido Express #005...");
-        pedidoExpress1.cancelar();
-        System.out.println();
-
-        // Historial
-        System.out.println("========================================");
-        System.out.println("       HISTORIAL DE ENTREGAS");
-        System.out.println("========================================");
-        pedidoComida1.verHistorial();
-        pedidoEncomienda1.verHistorial();
-        pedidoExpress1.verHistorial();
         System.out.println();
 
         // Creación de repartidores
-        Repartidor camila = new Repartidor("Camila");
-        Repartidor luis = new Repartidor("Luis");
-        Repartidor pedro = new Repartidor("Pedro");
-
-        // Asignación de pedidos
-        camila.agregarPedido(pedidoComida1);
-        camila.agregarPedido(pedidoComida2);
-
-        luis.agregarPedido(pedidoEncomienda1);
-        luis.agregarPedido(pedidoEncomienda2);
-
-        pedro.agregarPedido(pedidoExpress1);
-        pedro.agregarPedido(pedidoExpress2);
+        Repartidor camila = new Repartidor("Camila", zonaDeCarga);
+        Repartidor luis = new Repartidor("Luis", zonaDeCarga);
+        Repartidor pedro = new Repartidor("Pedro", zonaDeCarga);
 
         // Ejecución concurrente
         System.out.println("========================================");
@@ -154,16 +100,48 @@ public class Main {
         executor.shutdown();
 
         try {
-            while (!executor.isTerminated()) {
-                Thread.sleep(100);
+
+            if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
+                System.out.println("El proceso de entregas tardó demasiado.");
+                executor.shutdownNow();
             }
+
         } catch (InterruptedException e) {
+
             System.out.println("El proceso de entregas fue interrumpido.");
-            Thread.currentThread().interrupt();
+
             executor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+
+        // Verificación final
+        System.out.println();
+        System.out.println("========================================");
+        System.out.println("       ESTADO FINAL DE LOS PEDIDOS");
+        System.out.println("========================================");
+
+        boolean todosEntregados = true;
+
+        for (Pedido pedido : pedidos) {
+
+            System.out.println("Pedido #"
+                    + String.format("%03d", pedido.getIdPedido())
+                    + " - Estado: "
+                    + pedido.getEstado());
+
+            if (pedido.getEstado() != model.EstadoPedido.ENTREGADO) {
+                todosEntregados = false;
+            }
         }
 
         System.out.println();
+
+        if (todosEntregados) {
+            System.out.println("Todos los pedidos han sido entregados correctamente");
+        } else {
+            System.out.println("Algunos pedidos no fueron entregados correctamente.");
+        }
+
         System.out.println("========================================");
         System.out.println("       PROCESO FINALIZADO");
         System.out.println("========================================");

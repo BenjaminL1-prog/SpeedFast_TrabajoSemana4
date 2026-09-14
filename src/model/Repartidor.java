@@ -1,18 +1,13 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 public class Repartidor implements Runnable {
 
     private String nombre;
-    private ArrayList<Pedido> pedidos;
-    private Random random;
+    private ZonaDeCarga zonaDeCarga;
 
-    public Repartidor(String nombre) {
+    public Repartidor(String nombre, ZonaDeCarga zonaDeCarga) {
         this.nombre = nombre;
-        this.pedidos = new ArrayList<>();
-        this.random = new Random();
+        this.zonaDeCarga = zonaDeCarga;
     }
 
     public String getNombre() {
@@ -23,31 +18,47 @@ public class Repartidor implements Runnable {
         this.nombre = nombre;
     }
 
-    public ArrayList<Pedido> getPedidos() {
-        return pedidos;
+    public ZonaDeCarga getZonaDeCarga() {
+        return zonaDeCarga;
     }
 
-    public void agregarPedido(Pedido pedido) {
-        pedidos.add(pedido);
+    public void setZonaDeCarga(ZonaDeCarga zonaDeCarga) {
+        this.zonaDeCarga = zonaDeCarga;
     }
 
     @Override
     public void run() {
 
-        for (Pedido pedido : pedidos) {
+        while (true) {
+
+            Pedido pedido = zonaDeCarga.retirarPedido();
+
+            if (pedido == null) {
+                break;
+            }
 
             System.out.println("[Repartidor: " + nombre + "] "
-                    + "Entregando Pedido #"
-                    + String.format("%03d", pedido.getIdPedido()) + "...");
+                    + "retiró Pedido #"
+                    + String.format("%03d", pedido.getIdPedido())
+                    + " - Estado: " + pedido.getEstado());
 
             try {
-                int tiempoEspera = 1000 + random.nextInt(3000);
-                Thread.sleep(tiempoEspera);
+                int tiempoEntrega = 2000;
+
+                System.out.println("[Repartidor: " + nombre + "] "
+                        + "Entregando Pedido #"
+                        + String.format("%03d", pedido.getIdPedido())
+                        + "...");
+
+                Thread.sleep(tiempoEntrega);
+
+                pedido.setEstado(EstadoPedido.ENTREGADO);
 
                 System.out.println("[Repartidor: " + nombre + "] "
                         + "Pedido #"
                         + String.format("%03d", pedido.getIdPedido())
-                        + " entregado.");
+                        + " entregado. Estado: "
+                        + pedido.getEstado());
 
             } catch (InterruptedException e) {
 
@@ -60,7 +71,6 @@ public class Repartidor implements Runnable {
         }
 
         System.out.println("[Repartidor: " + nombre
-                + "] Finalizó sus entregas.");
+                + "] No quedan pedidos disponibles. Finalizó su jornada.");
     }
 }
-
